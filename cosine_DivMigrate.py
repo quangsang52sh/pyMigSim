@@ -6,6 +6,7 @@ from scipy.spatial.distance import cosine
 from sklearn.metrics import mean_squared_error
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.decomposition import PCA
+import plotly.graph_objs as go
 import sys
 import time
 import imageio
@@ -134,6 +135,44 @@ ax.set_title('3D PCA Plot')
 # Save the plot as an image file
 plt.savefig('3d_pca_plot.png')
 
+
+print("")
+print("Generating all the highest simulation in 3D cube...")
+# plot in math3D
+data2 = []
+for i in range(0,len(list(bestOptions.index))):
+     data2.append(matrix2[i])
+
+pca2 = PCA(n_components=3)
+data2_3d = pca2.fit_transform(data2)
+
+# Extract vectors for each data point
+vectors = np.zeros_like(data2_3d)
+for i in range(len(data2_3d)):
+    vectors[i] = data2_3d[i] / np.linalg.norm(data2_3d[i]) 
+
+# Create a Plotly 3D scatter plot with vectors
+fig = go.Figure()
+
+# Add data points
+fig.add_trace(go.Scatter3d(x=data2_3d[:, 0], y=data2_3d[:, 1], z=data2_3d[:, 2], mode='markers'))
+
+# Add vectors
+for i in range(len(data2_3d)):
+    x, y, z = data2_3d[i]
+    vx, vy, vz = vectors[i]
+    fig.add_trace(go.Scatter3d(x=[0, vx], y=[0, vy], z=[0, vz], mode='lines', line=dict(color='blue')))
+
+# Set layout
+fig.update_layout(scene=dict(aspectmode='cube'))
+
+fig.write_html("plotly_figure.html")
+# Save as PNG
+fig.write_image("plotly_figure.png", width=1500, height=1200)
+
+print("")
+
+
 # Display the highest value with the position index
 highest_similarity_index = list(bestOptions.index)
 print("")
@@ -183,5 +222,3 @@ plt.title(f"Regression Plot of Cosine Similarities")
 plt.xlabel("Matrix Index")
 plt.ylabel("Similarity")
 plt.savefig(f"DivMigrate_simBoots.png",dpi=300)
-
-
