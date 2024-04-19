@@ -119,6 +119,12 @@ sns.regplot(x=list(range(len(similarities))), y=similarities, scatter_kws={"s": 
 for i in highest_similarity_index:
 	sns.regplot(x=[i], y=[similarities[i]], scatter_kws={"s": 50, "color": "red"}, fit_reg=False)
 
+# annotation 
+#plt.annotate(f'Bootstrap: {highest_similarity_index+1}', 
+#             xy=(highest_similarity_index, similarities[highest_similarity_index]), 
+#             xytext=(highest_similarity_index - 0.01, similarities[highest_similarity_index] - 0.08),
+#             arrowprops=dict(facecolor='black', arrowstyle='->', connectionstyle='arc3,rad=0.5'),
+#             color='red')
 
 plt.title(f"Regression Plot of Cosine Similarities")
 plt.xlabel("Matrix Index")
