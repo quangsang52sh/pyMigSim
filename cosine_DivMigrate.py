@@ -3,6 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from scipy.spatial.distance import cosine
+from scipy.stats import ttest_ind
 from sklearn.metrics import mean_squared_error
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.decomposition import PCA
