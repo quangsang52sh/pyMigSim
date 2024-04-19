@@ -4,8 +4,12 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from scipy.spatial.distance import cosine
 from sklearn.metrics import mean_squared_error
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn.decomposition import PCA
 import sys
 import time
+import imageio
+import os
 
 
 # Check if the correct number of command line arguments is provided
@@ -77,6 +81,58 @@ bestOptions = merged_df[merged_df['Similarities'] == similarities[np.argmax(simi
 merged_df.to_csv("All_Cosine_similarities.csv")
 bestOptions.to_csv("Best_Options.csv")
 
+# PCA 3D for cosine similarity in distance
+print("Plot a point in 3D of using cosine distance")
+data = []
+data.append(matrix1[0])
+data.extend(matrix2)
+pca = PCA(n_components=3)
+# Perform PCA to reduce to 3 dimensions
+data_3d = pca.fit_transform(data)
+
+# Create a function to generate the plot
+def plot_3d_pca(data_3d, angle):
+    fig = plt.figure(figsize=(16, 12))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(data_3d[:, 0], data_3d[:, 1], data_3d[:, 2])
+    ax.set_xlabel('PC1')
+    ax.set_ylabel('PC2')
+    ax.set_zlabel('PC3')
+    ax.set_title('3D PCA Plot')
+    ax.view_init(30, angle)  # Set the viewpoint angle
+    return fig
+
+# Create GIF frames
+print("")
+print("Making gif file from 3D pics..")
+angles = np.linspace(0, 360, 36)  # Generate 36 frames with 10 degrees interval
+frames = []
+for angle in angles:
+    fig = plot_3d_pca(data_3d, angle)
+    filename = f'frame_{int(angle)}.png'
+    fig.savefig(filename)
+    plt.close(fig)
+    frames.append(imageio.imread(filename))
+
+# Save frames as GIF
+imageio.mimsave('3d_pca_plot.gif', frames, duration=1)
+
+# Cleanup: remove temporary image files
+for filename in os.listdir('.'):
+    if filename.startswith('frame_'):
+        os.remove(filename)
+
+print("Generating the single pic for 3D plot.")
+# Create a 3D scatter plot
+fig = plt.figure(figsize=(16, 12))
+ax = fig.add_subplot(111, projection='3d')
+ax.scatter(data_3d[:, 0], data_3d[:, 1], data_3d[:, 2])
+ax.set_xlabel('PC1')
+ax.set_ylabel('PC2')
+ax.set_zlabel('PC3')
+ax.set_title('3D PCA Plot')
+# Save the plot as an image file
+plt.savefig('3d_pca_plot.png')
 
 # Display the highest value with the position index
 highest_similarity_index = list(bestOptions.index)
@@ -96,8 +152,10 @@ for i in highest_similarity_index:
 	print(f"Sim {i}, MSE : {mse}")
 	MSE_value.append(mse)
 
+print("Mean of squared running test..")
+MSE_value
 MSE_value.to_csv("MSE_value.csv")
-
+print("")
 
 # Pulling the values
 print("Pulling model for the best simulation...")
@@ -112,6 +170,8 @@ for i,(l,k) in enumerate(list(zip(bestSim_initial,bestSim_models))):
 
 
 # Create a regression plot with custom colors
+print("")
+print("Plotting the highest similarities...")
 plt.figure(figsize=(13, 8))
 sns.regplot(x=list(range(len(similarities))), y=similarities, scatter_kws={"s": 20, "color": "blue", "alpha": 0.5}, line_kws={"color": "green"}, ci=95, scatter=True)
 
@@ -119,14 +179,9 @@ sns.regplot(x=list(range(len(similarities))), y=similarities, scatter_kws={"s": 
 for i in highest_similarity_index:
 	sns.regplot(x=[i], y=[similarities[i]], scatter_kws={"s": 50, "color": "red"}, fit_reg=False)
 
-# annotation 
-#plt.annotate(f'Bootstrap: {highest_similarity_index+1}', 
-#             xy=(highest_similarity_index, similarities[highest_similarity_index]), 
-#             xytext=(highest_similarity_index - 0.01, similarities[highest_similarity_index] - 0.08),
-#             arrowprops=dict(facecolor='black', arrowstyle='->', connectionstyle='arc3,rad=0.5'),
-#             color='red')
-
 plt.title(f"Regression Plot of Cosine Similarities")
 plt.xlabel("Matrix Index")
 plt.ylabel("Similarity")
 plt.savefig(f"DivMigrate_simBoots.png",dpi=300)
+
+
