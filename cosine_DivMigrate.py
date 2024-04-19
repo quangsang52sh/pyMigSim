@@ -61,6 +61,7 @@ print("")
 
 # Calculate cosine similarity between the given matrix and all other matrices
 print(f"Global testing of {sim} using Cosine similarity")
+print("___________________________________________________________")
 similarities = [1 - cosine(matrix1[0], matrix) for matrix in matrix2]
 for idx, similarity in enumerate(similarities):
 	if idx % 100 == 0:
@@ -117,7 +118,7 @@ for angle in angles:
     frames.append(imageio.imread(filename))
 
 # Save frames as GIF
-imageio.mimsave('3d_pca_plot.gif', frames, duration=1)
+imageio.mimsave('3d_pca_plot.gif', frames, duration=3)
 
 # Cleanup: remove temporary image files
 for filename in os.listdir('.'):
@@ -138,7 +139,7 @@ plt.savefig('3d_pca_plot.png')
 
 
 print("")
-print("Generating all the highest simulation in 3D cube...")
+print("Generating all the highest simulations in 3D cube...")
 # plot in math3D
 data2 = []
 for i in range(0,len(list(bestOptions.index))):
@@ -179,11 +180,11 @@ highest_similarity_index = list(bestOptions.index)
 print("")
 print("#####################################################")
 print("Best similarities: " + str(highest_similarity_index))
-print(f"There is a {len(highest_similarity_index)} best simulation options, similarity: {similarities[np.argmax(similarities)]}, P-value: {pvalue[np.argmax(similarities)]}, t-test: {ttest[np.argmax(similarities)]}")
+print(f"There are {len(highest_similarity_index)} best simulation options, similarity: {similarities[np.argmax(similarities)]}, P-value: {pvalue[np.argmax(similarities)]}, t-test: {ttest[np.argmax(similarities)]}")
 print("____________________________________________")
 print("")
-
-
+print("Running the mean of squared error for looking the best simulation...")
+print("_____________________________________________________________________")
 # testing mean of square for choosing the best one
 MSE_value=[]
 initial = matrix1[0]
@@ -192,21 +193,22 @@ for i in highest_similarity_index:
 	print(f"Sim {i}, MSE : {mse}")
 	MSE_value.append(mse)
 
-print("Mean of squared running test..")
 MSE_value
-MSE_value.to_csv("MSE_value.csv")
+pd.DataFrame({'mse':MSE_value}).to_csv("MSE_value.csv")
 print("")
 
 # Pulling the values
-print("Pulling model for the best simulation...")
+print("Pulling model for the best simulations...")
 bestSim_initial = matrix1[0]
-bestSim_models = matrix2[highest_similarity_index+1]
 print("All cases for comparing in between the populations")
 print("")
-print(f"Positions-Matrix_:_Initial-Migration_:_Simulation-{highest_similarity_index+1}")
-print("__________________________________________________________")
-for i,(l,k) in enumerate(list(zip(bestSim_initial,bestSim_models))):
-	print(f"Pos {i+1}  :  {l}  :  {k}")
+for i in range(0,len(highest_similarity_index)):
+	bestSim_models = matrix2[i+1]
+	print(f"Positions-Matrix_:_Initial-Migration_:_Simulation-{i+1}")
+	print("__________________________________________________________")
+	for j,(l,k) in enumerate(list(zip(bestSim_initial,bestSim_models))):
+		print(f"Pos {j+1}  :  {l}  :  {k}")
+		print("_______________________________________")
 
 
 # Create a regression plot with custom colors
@@ -223,3 +225,4 @@ plt.title(f"Regression Plot of Cosine Similarities")
 plt.xlabel("Matrix Index")
 plt.ylabel("Similarity")
 plt.savefig(f"DivMigrate_simBoots.png",dpi=300)
+
