@@ -3,7 +3,10 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from scipy.spatial.distance import cosine
+from sklearn.metrics import mean_squared_error
 import sys
+import time
+
 
 # Check if the correct number of command line arguments is provided
 if len(sys.argv) != 3:
@@ -41,28 +44,83 @@ for i in range(1,sim+1):
 	# save list matrix
 	matrix2.append(listdata2)
 
-# Calculate cosine similarity between the given matrix and all other matrices
-similarities = [1 - cosine(matrix1[0], matrix) for matrix in matrix2]
+print(f"Input the data 1: \n {matrix1}")
+print("")
+print(f"Initial matrixs processed succesfully")
+print("")
+print(f"Input the data 1: \n {matrix2}")
+print("")
+print(f"Simulation matrixs processed succesfully")
+print("")
 
-# Annotate the highest point with red marker and display its index as text
-highest_similarity_index = np.argmax(similarities)
-print(f"Best boostrap simulation : {highest_similarity_index}")
+# Calculate cosine similarity between the given matrix and all other matrices
+print(f"Global testing of {sim} using Cosine similarity")
+similarities = [1 - cosine(matrix1[0], matrix) for matrix in matrix2]
+for idx, similarity in enumerate(similarities):
+	if idx % 100 == 0:
+		print(f"Similarity every 100 lines of Sim_test_{idx}: {similarity}")
+	time.sleep(0.01)
+
+# runnin t-test in indidual list
+pvalue = []
+ttest = []
+for i in range(0,len(matrix1)):
+	t_stat, p_val = ttest_ind(matrix1[i], matrix2[i])
+	print(f" Simulation {i+1}: T-statistic: {t_stat},P-value: {p_val}")
+	pvalue.append(p_val)
+	ttest.append(t_stat)
+
+
+#convert to pd
+merged_df = pd.concat([pd.DataFrame({'Similarities': similarities}),pd.DataFrame({'P_Values': pvalue}),pd.DataFrame({'T_Test': ttest})],axis=1).sort_values("Similarities",ascending=False)
+bestOptions = merged_df[merged_df['Similarities'] == similarities[np.argmax(similarities)]]
+merged_df.to_csv("All_Cosine_similarities.csv")
+bestOptions.to_csv("Best_Options.csv")
+
+
+# Display the highest value with the position index
+highest_similarity_index = list(bestOptions.index)
+print("")
+print("#####################################################")
+print("Best similarities: " + str(highest_similarity_index))
+print(f"There is a {len(highest_similarity_index)} best simulation options, similarity: {similarities[np.argmax(similarities)]}, P-value: {pvalue[np.argmax(similarities)]}, t-test: {ttest[np.argmax(similarities)]}")
+print("____________________________________________")
+print("")
+
+
+# testing mean of square for choosing the best one
+MSE_value=[]
+initial = matrix1[0]
+for i in highest_similarity_index:
+	mse = mean_squared_error(initial, matrix2[i])
+	print(f"Sim {i}, MSE : {mse}")
+	MSE_value.append(mse)
+
+MSE_value.to_csv("MSE_value.csv")
+
+
+# Pulling the values
+print("Pulling model for the best simulation...")
+bestSim_initial = matrix1[0]
+bestSim_models = matrix2[highest_similarity_index+1]
+print("All cases for comparing in between the populations")
+print("")
+print(f"Positions-Matrix_:_Initial-Migration_:_Simulation-{highest_similarity_index+1}")
+print("__________________________________________________________")
+for i,(l,k) in enumerate(list(zip(bestSim_initial,bestSim_models))):
+	print(f"Pos {i+1}  :  {l}  :  {k}")
+
 
 # Create a regression plot with custom colors
 plt.figure(figsize=(13, 8))
 sns.regplot(x=list(range(len(similarities))), y=similarities, scatter_kws={"s": 20, "color": "blue", "alpha": 0.5}, line_kws={"color": "green"}, ci=95, scatter=True)
 
 # Highlight the highest point within the regression plot
-sns.regplot(x=[highest_similarity_index], y=[similarities[highest_similarity_index]], scatter_kws={"s": 50, "color": "red"}, fit_reg=False)
+for i in highest_similarity_index:
+	sns.regplot(x=[i], y=[similarities[i]], scatter_kws={"s": 50, "color": "red"}, fit_reg=False)
 
-# annotation 
-plt.annotate(f'Bootstrap: {highest_similarity_index}', 
-             xy=(highest_similarity_index, similarities[highest_similarity_index]), 
-             xytext=(highest_similarity_index + 0.2, similarities[highest_similarity_index] + 0.08),
-             arrowprops=dict(facecolor='black', arrowstyle='->', connectionstyle='arc3,rad=0.5'),
-             color='red')
 
-plt.title("Regression Plot of Cosine Similarities with Custom Colors")
+plt.title(f"Regression Plot of Cosine Similarities")
 plt.xlabel("Matrix Index")
 plt.ylabel("Similarity")
-plt.savefig(f"DivMigrate_simBoots_{highest_similarity_index}.png",dpi=300)
+plt.savefig(f"DivMigrate_simBoots.png",dpi=300)
