@@ -235,15 +235,15 @@ if len(highest_similarity_index) > 1:
 	print("Define all the best simulations for running stats")
 	for i,j in enumerate(highest_similarity_index):
 		# Define the data
-		name = f"dataN_{j}"
-		globals()[name] = matrix2[j+1]
+		name = f"sim_{j+1}"
+		globals()[name] = matrix2[j]
 	
 	# Combine the data into a numpy array
-	data_new = np.array([globals()[f"dataN_{i}"] for i in highest_similarity_index]).T
+	data_new = np.array([globals()[f"sim_{i}"] for i in highest_similarity_index]).T
 	# Ensure data_new is a 2-dimensional array
 	data_new = np.atleast_2d(data_new)
 	# create dataframe
-	df_new = pd.DataFrame(data_new, columns=[f"dataN_{i}" for i in highest_similarity_index])
+	df_new = pd.DataFrame(data_new, columns=[f"sim_{i}" for i in highest_similarity_index])
 	# add constant
 	df_new['const'] = 1
 	df_new = df_new.astype(float)
@@ -259,35 +259,29 @@ if len(highest_similarity_index) > 1:
 	# Fit the OLS model
 	model = sm.OLS(y, X).fit()
 	# Extract significant values
-	print(model.summary())
-	pval_ols = model.pvalues
-	pd.DataFrame(np.array(pval_ols.index),np.array(pval_ols)).to_csv("bestData_OLS_pval.csv")
-	olsdata = pd.DataFrame(np.array(pval_ols.index),np.array(pval_ols))
-	pval_ols_mod = pd.DataFrame(olsdata[0][olsdata.index != 0.0])
+	print(model.summary2())
+	#pval_ols = model.pvalues
+	#pd.DataFrame(np.array(pval_ols.index),np.array(pval_ols)).to_csv("bestData_OLS_pval.csv")
+	#olsdata = pd.DataFrame(np.array(pval_ols.index),np.array(pval_ols))
+	#pval_ols_mod = pd.DataFrame(olsdata[0][olsdata.index != 0.0])
 	# Create a DataFrame to store the results
 	results_df = pd.DataFrame({
-    		'Fitted_Values': model.fittedvalues,
-    		'Residuals': model.resid,
     		'Coefficients': model.params
 	})
 	# Save the best result to a CSV file
-	results_df.to_csv('bestData_ols_result.csv')
+	results_df = results_df.sort_values('Coefficients',ascending=False)
+	results_df.to_csv('bestData_ols_Coefficient.csv')
 	# Find the index corresponding to the highest fitted value
-	index_of_max_fitted_value = results_df['Fitted_Values'].idxmax()
+	index_of_max_value = results_df['Coefficients'].iloc[1:].idxmax()
 	# Retrieve the row with the highest fitted value
-	best_result = results_df.loc[index_of_max_fitted_value]
-	print("Best Result:")
+	best_result = results_df.loc[index_of_max_value]
+	print("###########################")
+	print("Your final simulation after running OLS was:")
 	print(best_result)
-	# Output the results
-	for val in np.array(pval_ols_mod[pval_ols_mod.index <= 0.05]):
-		print("###########################")
-		print(f"Your final simulation after running OLS was: {str(val).replace('dataN_', '')}")
-		print("")
-
-	print(f"{pval_ols_mod}")
+	print("")
 	print("End of running simulation...")	
 else:
-	print(f"The best simulation is {matrix2[highest_similarity_index+1]}")
+	print(f"The best simulation is {matrix2[highest_similarity_index+1]} : sim {highest_similarity_index+1}")
 	print("End of running simulation...")
 
 
