@@ -4,3 +4,19 @@ To run the simulation: <br/>
 - Execute migration using DivMigrate in RStudio (`python pyDivMigSim.py <R_script> <genpop_file> <method [nm|d|g]> <simulation>`)
 - Determine the highest value of the simulation number using cosine distance (`python cosine_DivMigrate.py <method [nm|d|g]> <simulation>`)
 - Compute statistics for all the best simulations to select the optimal one (`python bestMigrateSim.py`)
+
+# Require package
+```
+Rstudio 4.2.2
+r-diveRsity
+python 3.8.15
+numpy
+pandas
+seaborn
+matplotlib
+scipy
+sklearn
+mpl_toolkits
+plotly
+imageio
+```
