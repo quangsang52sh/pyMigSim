@@ -239,11 +239,11 @@ if len(highest_similarity_index) > 1:
 		globals()[name] = matrix2[j]
 	
 	# Combine the data into a numpy array
-	data_new = np.array([globals()[f"name_{i+1}"] for i in highest_similarity_index]).T
+	data_new = np.array([globals()[f"sim_{i+1}"] for i in highest_similarity_index]).T
 	# Ensure data_new is a 2-dimensional array
 	data_new = np.atleast_2d(data_new)
 	# create dataframe
-	df_new = pd.DataFrame(data_new, columns=[f"name_{i+1}" for i in highest_similarity_index])
+	df_new = pd.DataFrame(data_new, columns=[f"sim_{i+1}" for i in highest_similarity_index])
 	# add constant
 	df_new['const'] = 1
 	df_new = df_new.astype(float)
