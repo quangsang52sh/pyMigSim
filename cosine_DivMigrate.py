@@ -230,7 +230,7 @@ plt.ylabel("Similarity")
 plt.savefig(f"DivMigrate_simBoots.png",dpi=300)
 
 # Generating a new matrix based on the running stats in Python
-matrix3=[]
+#matrix3=[]
 if len(highest_similarity_index) > 1:
 	print("Define all the best simulations for running stats")
 	for i,j in enumerate(highest_similarity_index):
