@@ -229,13 +229,13 @@ plt.ylabel("Similarity")
 plt.savefig(f"DivMigrate_simBoots.png",dpi=300)
 
 # Generating a new matrix based on the running stats in Python
-matrix_3=[]
+matrix3=[]
 if len(highest_similarity_index) > 1:
 	print("Define all the best simulations for running stats")
 	for i,j in enumerate(highest_similarity_index):
 		# Define the data
 		name = f"data_{i}"
-		globals()[name] = matrix_2[j]
+		globals()[name] = matrix2[j]
 	# Combine the data into a numpy array
 	data_new = np.array([f"data_{i}"] for i in highest_similarity_index).T
 	df = sm.add_constant(data)
@@ -254,16 +254,16 @@ if len(highest_similarity_index) > 1:
 	# Output the results
 	for idx, val in enumerate(data_new[:, max_f_index]):
 		print(f"Element {chr(97+idx)}: {val}")
-		matrix_3.append(val)
+		matrix3.append(val)
 	
 	#create a new matrix
-	new_matrix = np.array(matrix_3).reshape(len(data),len(data))
+	new_matrix = np.array(matrix3).reshape(len(data),len(data))
 	new_matrix.to_csv('Best_matrix.csv', index=False)
 	print(f"The best simulation is {highest_similarity_index}")
 	print("End of running simulation...")	
 else:
-	print(f"The best simulation is {matrix_2[highest_similarity_index]}")
-	matrix_2[highest_similarity_index].to_csv('Best_matrix.csv', index=False)
+	print(f"The best simulation is {matrix2[highest_similarity_index]}")
+	matrix2[highest_similarity_index].to_csv('Best_matrix.csv', index=False)
 	print("End of running simulation...")
 
 
