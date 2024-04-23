@@ -99,3 +99,8 @@ Your final simulation after running OLS was:
 Coefficients    8.673617e-18
 Name: sim_7660, dtype: float64
 ```
+
+# Citations
+
+
+
