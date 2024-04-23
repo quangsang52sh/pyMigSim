@@ -267,8 +267,10 @@ if len(highest_similarity_index) > 1:
 	
 	# Output the results
 	for val in np.array(pval_ols_mod[pval_ols_mod.index <= 0.05]):
+		print("###########################")
 		print(f"Your final simulation after running OLS was: {str(val).replace('dataN_', '')}")
-
+		print("")
+	print(f"{pval_ols_mod}")
 	print("End of running simulation...")	
 else:
 	print(f"The best simulation is {matrix2[highest_similarity_index+1]}")
