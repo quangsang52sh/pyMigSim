@@ -235,7 +235,7 @@ if len(highest_similarity_index) > 1:
 	for i,j in enumerate(highest_similarity_index):
 		# Define the data
 		name = f"data_{i}"
-		global[](name) = matrix_2[j]
+		globals[](name) = matrix_2[j]
 	# Combine the data into a numpy array
 	data_new = np.array([f"data_{i}"] for i in highest_similarity_index]).T
 	df = sm.add_constant(data)
