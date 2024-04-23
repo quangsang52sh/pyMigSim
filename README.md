@@ -6,7 +6,7 @@ To run the simulation: <br/>
 - Compute statistics of `OLS (Ordinary least-squares)` for all the best simulations to select the optimal one
 
 
-# Require package
+# Require packages
 ```
 Rstudio 4.2.2
 r-diveRsity
