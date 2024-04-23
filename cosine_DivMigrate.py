@@ -261,10 +261,23 @@ if len(highest_similarity_index) > 1:
 	# Extract significant values
 	print(model.summary())
 	pval_ols = model.pvalues
-	pd.DataFrame(np.array(pval_ols.index),np.array(pval_ols)).to_csv("bestData_OLS.csv")
+	pd.DataFrame(np.array(pval_ols.index),np.array(pval_ols)).to_csv("bestData_OLS_pval.csv")
 	olsdata = pd.DataFrame(np.array(pval_ols.index),np.array(pval_ols))
 	pval_ols_mod = pd.DataFrame(olsdata[0][olsdata.index != 0.0])
-	
+	# Create a DataFrame to store the results
+	results_df = pd.DataFrame({
+    		'Fitted_Values': model.fittedvalues,
+    		'Residuals': model.resid,
+    		'Coefficients': model.params
+	})
+	# Save the best result to a CSV file
+	results_df.to_csv('bestData_ols_result.csv')
+	# Find the index corresponding to the highest fitted value
+	index_of_max_fitted_value = results_df['Fitted_Values'].idxmax()
+	# Retrieve the row with the highest fitted value
+	best_result = results_df.loc[index_of_max_fitted_value]
+	print("Best Result:")
+	print(best_result)
 	# Output the results
 	for val in np.array(pval_ols_mod[pval_ols_mod.index <= 0.05]):
 		print("###########################")
