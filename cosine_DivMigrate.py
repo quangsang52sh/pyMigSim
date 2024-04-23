@@ -7,6 +7,7 @@ from scipy.stats import ttest_ind
 from sklearn.metrics import mean_squared_error
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.decomposition import PCA
+import statsmodels.api as sm
 from statsmodels.formula.api import ols
 import plotly.graph_objs as go
 import sys
@@ -234,36 +235,42 @@ if len(highest_similarity_index) > 1:
 	print("Define all the best simulations for running stats")
 	for i,j in enumerate(highest_similarity_index):
 		# Define the data
-		name = f"data_{i}"
-		globals()[name] = matrix2[j]
-	# Combine the data into a numpy array
-	data_new = np.array([f"data_{i}"] for i in highest_similarity_index).T
-	df = sm.add_constant(data)
-	df = pd.DataFrame(df, columns=['const'] + [f'data_{i}' for i in highest_similarity_index])
-	# Perform ANOVA
-	print("")
-	print("ANOVA running ....")
-	print("________________________")
-	formula = ' + '.join([f'data_{i}' for i in highest_similarity_index]) + ' ~ const'
-	model = ols(formula, df).fit()
-	anova_table = sm.stats.anova_lm(model, typ=2)
-	# Extract significant values
-	f_values = anova_table['F'][1:]
-	# Find the index of the maximum F-value
-	max_f_index = np.argmax(f_values)
-	# Output the results
-	for idx, val in enumerate(data_new[:, max_f_index]):
-		print(f"Element {chr(97+idx)}: {val}")
-		matrix3.append(val)
+		name = f"dataN_{j}"
+		globals()[name] = matrix2[j+1]
 	
-	#create a new matrix
-	new_matrix = np.array(matrix3).reshape(len(data),len(data))
-	new_matrix.to_csv('Best_matrix.csv', index=False)
-	print(f"The best simulation is {highest_similarity_index}")
+	# Combine the data into a numpy array
+	data_new = np.array([globals()[f"dataN_{i}"] for i in highest_similarity_index]).T
+	# Ensure data_new is a 2-dimensional array
+	data_new = np.atleast_2d(data_new)
+	# create dataframe
+	df_new = pd.DataFrame(data_new, columns=[f"dataN_{i}" for i in highest_similarity_index])
+	# add constant
+	df_new['const'] = 1
+	df_new = df_new.astype(float)
+	# Perform OLS
+	print("")
+	print("OLS running ....")
+	print("________________________")
+	# Define independent and dependent variables
+	X = df_new.drop(columns=['const'])  # Independent variables (excluding the 'const' column)
+	y = df_new['const']  # Dependent variable
+	# Add a constant to the independent variables
+	X = sm.add_constant(X)
+	# Fit the OLS model
+	model = sm.OLS(y, X).fit()
+	# Extract significant values
+	print(model.summary())
+	pval_ols = model.pvalues
+	pd.DataFrame(np.array(pval_ols.index),np.array(pval_ols)).to_csv("bestData_OLS.csv")
+	pval_ols_mod = pd.DataFrame(olsdata[0][olsdata.index != 0.0])
+
+	# Output the results
+	for val in np.array(pval_ols_mod[pval_ols_mod.index <= 0.05]):
+		print(f"Your final simulation after running OLS was: {str(val).replace('dataN_', '')}")
+
 	print("End of running simulation...")	
 else:
-	print(f"The best simulation is {matrix2[highest_similarity_index]}")
-	matrix2[highest_similarity_index].to_csv('Best_matrix.csv', index=False)
+	print(f"The best simulation is {matrix2[highest_similarity_index+1]}")
 	print("End of running simulation...")
 
 
