@@ -52,11 +52,11 @@ for i in range(1,sim+1):
 	# save list matrix
 	matrix2.append(listdata2)
 
-print(f"Input the data 1: \n {matrix1}")
+#print(f"Input the data 1: \n {matrix1}")
 print("")
 print(f"Initial matrixs processed succesfully")
 print("")
-print(f"Input the data 1: \n {matrix2}")
+#print(f"Input the data 1: \n {matrix2}")
 print("")
 print(f"Simulation matrixs processed succesfully")
 print("")
@@ -66,8 +66,8 @@ print(f"Global testing of {sim} using Cosine similarity")
 print("___________________________________________________________")
 similarities = [1 - cosine(matrix1[0], matrix) for matrix in matrix2]
 for idx, similarity in enumerate(similarities):
-	if idx % 100 == 0:
-		print(f"Similarity every 100 lines of Sim_test_{idx}: {similarity}")
+	if idx % 200 == 0:
+		print(f"Similarity every 200 lines of Sim_test_{idx}: {similarity}")
 	time.sleep(0.01)
 
 # runnin t-test in indidual list
