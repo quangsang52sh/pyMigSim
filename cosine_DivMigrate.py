@@ -262,8 +262,9 @@ if len(highest_similarity_index) > 1:
 	print(model.summary())
 	pval_ols = model.pvalues
 	pd.DataFrame(np.array(pval_ols.index),np.array(pval_ols)).to_csv("bestData_OLS.csv")
+	olsdata = pd.DataFrame(np.array(pval_ols.index),np.array(pval_ols))
 	pval_ols_mod = pd.DataFrame(olsdata[0][olsdata.index != 0.0])
-
+	
 	# Output the results
 	for val in np.array(pval_ols_mod[pval_ols_mod.index <= 0.05]):
 		print(f"Your final simulation after running OLS was: {str(val).replace('dataN_', '')}")
