@@ -3,7 +3,9 @@ The DivMigrate simulation in Python (`pyMigSim`) runs `10,000` replications to s
 To run the simulation: <br/>
 - Execute migration using DivMigrate in RStudio (`python pyDivMigSim.py <R_script> <genpop_file> <method [nm|d|g]> <simulation>`)
 - Determine the highest value of the simulation number using cosine distance (`python cosine_DivMigrate.py <method [nm|d|g]> <simulation>`)
-- Compute statistics for all the best simulations to select the optimal one (`python bestMigrateSim.py`)
+- Compute statistics for all the best simulations to select the optimal one
+
+we can choose the best simulation in the list of the best simulations after running `cosine_DivMigrate.py` or using the new matrix for the network bulding
 
 # Require package
 ```
