@@ -15,6 +15,7 @@ pandas
 seaborn
 matplotlib
 scipy
+statsmodels
 sklearn
 mpl_toolkits
 plotly
