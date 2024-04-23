@@ -1,6 +1,6 @@
 # pyMigSim
-DivMigrate simulation in python (`pyMigSim`) running 10000 replications for chossing the highest values apllied the distance in `cosine`. The method compute cosine distance between two vectors in spatial using `scipy` module in python. <br/>
-To run simulation: <br/>
-- Running migration using DivMigrate in R studio (`python pyDivMigSim.py <R_script> <genpop_file> <method [nm|d|g]> <simulation>`)
-- Running cosine distance to figure out the highest value of simulation number (`python cosine_DivMigrate.py <method [nm|d|g]> <simulation>`)
-- Running statistics of all the best simulations to select the best one (`python bestMigrateSim.py`) 
+The DivMigrate simulation in Python (`pyMigSim`) runs `10,000` replications to select the highest values, employing cosine distance calculation. The method computes the cosine distance between two vectors in space using the SciPy module in Python. <br/>
+To run the simulation: <br/>
+- Execute migration using DivMigrate in RStudio (`python pyDivMigSim.py <R_script> <genpop_file> <method [nm|d|g]> <simulation>`)
+- Determine the highest value of the simulation number using cosine distance (`python cosine_DivMigrate.py <method [nm|d|g]> <simulation>`)
+- Compute statistics for all the best simulations to select the optimal one (`python bestMigrateSim.py`)
