@@ -7,6 +7,7 @@ from scipy.stats import ttest_ind
 from sklearn.metrics import mean_squared_error
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.decomposition import PCA
+from statsmodels.formula.api import ols
 import plotly.graph_objs as go
 import sys
 import time
@@ -81,6 +82,7 @@ for i in range(0,len(matrix1)):
 #convert to pd
 merged_df = pd.concat([pd.DataFrame({'Similarities': similarities}),pd.DataFrame({'P_Values': pvalue}),pd.DataFrame({'T_Test': ttest})],axis=1).sort_values("Similarities",ascending=False)
 bestOptions = merged_df[merged_df['Similarities'] == similarities[np.argmax(similarities)]]
+bestOptions = bestOptions[bestOptions['P_Values'] <= 0.05]
 merged_df.to_csv("All_Cosine_similarities.csv")
 bestOptions.to_csv("Best_Options.csv")
 
@@ -225,4 +227,42 @@ plt.title(f"Regression Plot of Cosine Similarities")
 plt.xlabel("Matrix Index")
 plt.ylabel("Similarity")
 plt.savefig(f"DivMigrate_simBoots.png",dpi=300)
+
+# Generating a new matrix based on the running stats in Python
+Matrix_3=[]
+if len(highest_similarity_index) > 1:
+	print("Define all the best simulations for running stats")
+	for i,j in enumerate(highest_similarity_index):
+		# Define the data
+		name = f"data_{i}"
+		global[](name) = matrix_2[j]
+	# Combine the data into a numpy array
+	data_new = np.array([f"data_{i}"] for i in highest_similarity_index]).T
+	df = sm.add_constant(data)
+	df = pd.DataFrame(df, columns=['const'] + [f'data_{i}' for i in highest_similarity_index])
+	# Perform ANOVA
+	print("")
+	print("ANOVA running ....")
+	print("________________________")
+	formula = ' + '.join([f'data_{i}' for i in highest_similarity_index]) + ' ~ const'
+	model = ols(formula, df).fit()
+	anova_table = sm.stats.anova_lm(model, typ=2)
+	# Extract significant values
+	f_values = anova_table['F'][1:]
+	# Find the index of the maximum F-value
+	max_f_index = np.argmax(f_values)
+	# Output the results
+	for idx, val in enumerate(data_new[:, max_f_index]):
+    		print(f"Element {chr(97+idx)}: {val}")
+		matrix_3.append(val)
+	#create a new matrix
+	new_matrix = np.array(matrix_3).reshape(len(data),len(data))
+	new_matrix.to_csv('Best_matrix.csv', index=False)
+	print(f"The best simulation is {highest_similarity_index}")
+	print("End of running simulation...")	
+else
+	print(f"The best simulation is {matrix_2[highest_similarity_index]}")
+	matrix_2[highest_similarity_index].to_csv('Best_matrix.csv', index=False)
+	print("End of running simulation...")
+
 
