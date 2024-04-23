@@ -270,6 +270,7 @@ if len(highest_similarity_index) > 1:
 		print("###########################")
 		print(f"Your final simulation after running OLS was: {str(val).replace('dataN_', '')}")
 		print("")
+
 	print(f"{pval_ols_mod}")
 	print("End of running simulation...")	
 else:
