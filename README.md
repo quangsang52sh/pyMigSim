@@ -25,7 +25,7 @@ imageio
 # Demo running
 - All cosine distance in 3D plot <br/>
 ![](./3d_pca_plot.gif) <br/>
-- The candidate simulation for choosing based on the highest similarities <br/>
+- The candidate simulations for choosing based on the highest similarities <br/>
 ![](./plotly_figure.png) <br/>
 - Plotting the regression from all dataset <br/>
 ![](./DivMigrate_simBoots.png) <br/>
