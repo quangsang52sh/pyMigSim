@@ -1,5 +1,7 @@
 # pyMigSim
+`DivMigrate` was run based on the script by `Sundqvist et al. (2016)`, as described in the paper: `https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4842207/`. To enhance the analysis for the study, I have used Python programming to independently run simulations and determine the best scenario for choosing an analysis. <br/>  
 The DivMigrate simulation in Python (`pyMigSim`) runs `1,000-10,000` replications to select the highest values, employing cosine distance calculation. The method computes the cosine distance between two vectors in 3D spatial using the SciPy module in Python. <br/>
+ 
 To run the simulation: <br/>
 - Execute migration using DivMigrate in RStudio (`python pyDivMigSim.py <R_script> <genpop_file> <method [nm|d|g]> <simulation>`)
 - Determine the highest value of the simulation number using cosine distance and selecting all the candidate's simulation running (`python SIMcos_DivMigrate.py <method [nm|d|g]> <simulation>`)
