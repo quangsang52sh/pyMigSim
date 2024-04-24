@@ -20,9 +20,9 @@ import subprocess
 class cosine_runningStats:
     print("""
 	###############################################################
-	Thank you for chossing my script......
+	Welcome to the script......
 	Running script after 5s ..
-	Please wait a sec !
+	Please wait a second!
 	_________________________
 	
     """)
