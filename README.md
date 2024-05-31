@@ -102,8 +102,8 @@ Coefficients    8.673617e-18
 Name: sim_7660, dtype: float64
 ```
 
-# Citations
-
+# Paper applied
+Genome-wide SNP analyses reveal high gene flow of endemic Smallscale Croaker (Boesemania microlepis) in the Lower Mekong Basin (in draft)
 
 # Contact
 ############################################ <br/>
