@@ -103,7 +103,7 @@ Name: sim_7660, dtype: float64
 ```
 
 # Paper applied
-`Genome-wide SNP analyses reveal high gene flow of endemic Smallscale Croaker (Boesemania microlepis) in the Lower Mekong Basin` <br/>
+`Genome-wide SNP analyses reveal high gene flow of endemic Smallscale Croaker (Boesemania microlepis) in the Lower Mekong Basin (2024)` <br/>
 ```
 Quyen Dang Ha Vu (quyenvdh@ntu.edu.vn), Binh Thuy Dang (binhdt@ntu.edu.vn), Oanh Thi Truong (oanhtt@ntu.edu.vn), Sang Quang Tran (sangtq@ntu.edu.vn), Bird E. Christopher (chris.bird@tamucc.edu), Kent Carpenter (kcarpent@odu.edu), Biesack E. Ellen (ebies001@odu.edu), Ackiss S. Amanda (aacki002@odu.edu)
 ```
